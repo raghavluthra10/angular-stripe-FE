@@ -3,7 +3,7 @@
 
   <h3>Amount: ${{ amount / 100 }}</h3>
 
-  <form id="payment-form">
+  <form id="payment-form" (submit)="payWithStripe($event)">
     <div id="card-element">
       <!-- Elements will create input elements here -->
     </div>
@@ -13,5 +13,7 @@
 
     <button id="submit">Submit Payment</button>
   </form>
+
+  <div *ngIf="paymentSuccessful">payment successful</div>
 </div>
 <router-outlet></router-outlet>
