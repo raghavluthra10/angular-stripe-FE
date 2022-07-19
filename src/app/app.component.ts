@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import axios from 'axios';
-import { HttpHeaders } from '@angular/common/http';
 
 declare let Stripe: (arg0: string) => any;
 
@@ -13,7 +12,10 @@ const connection: any = {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
+  ngAfterViewInit() {
+    this.startIntent();
+  }
   // headers: HttpHeaders
   title = 'angular-stripe';
   amount = 1000;
@@ -21,10 +23,11 @@ export class AppComponent {
   paymentIntent: any;
   elements: any;
 
-  async payWithStripe(e: any) {
+  async startIntent() {
     try {
-      e.preventDefault();
-      console.log('payWithStripe');
+      this.stripe = Stripe(
+        'pk_test_51LFwGLCuDfhw0FciV1gfhE0UMFj1ahmxK93BMXhtbRmjYFLGnhyxKxomOgF7JbJFND9kAxQlSZ0Dsnflc6BbYQGI009BcZ9C0V'
+      );
 
       const intent = await axios.get(connection.API_URL + `/secret`, {
         params: {
@@ -35,27 +38,16 @@ export class AppComponent {
 
       console.log('intent', intent.data);
 
-      // this.elements = this.stripe.elements();
+      const client_secret = intent.data.client_secret;
 
-      // var card = this.elements.create('card');
-      // card.mount('#card-element');
+      // console.log('Front end', client_secret);
+
+      this.elements = this.stripe.elements(client_secret);
+
+      const card = this.elements.create('card');
+      card.mount('#card-element');
     } catch (error) {
       console.error(error);
     }
   }
 }
-// this.stripe = Stripe(
-//   'pk_test_51LFwGLCuDfhw0FciV1gfhE0UMFj1ahmxK93BMXhtbRmjYFLGnhyxKxomOgF7JbJFND9kAxQlSZ0Dsnflc6BbYQGI009BcZ9C0V'
-// );
-
-// const getIntent = await axios.get('/intent')
-
-//   if(getIntent) {
-
-//   }
-
-// this.paymentIntent = await this.stripe.paymentIntents.create({
-//   amount: this.amount,
-//   currency: 'usd',
-//   metadata: { integration_check: 'accept_a_payment' },
-// });

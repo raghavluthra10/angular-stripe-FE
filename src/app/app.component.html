@@ -1,9 +1,9 @@
 <div class="container">
   <h1 class="containerHeading">Angular-Stripe</h1>
 
-  <h3>Amount</h3>
+  <h3>Amount: ${{ amount / 100 }}</h3>
 
-  <form id="payment-form" (submit)="payWithStripe($event)">
+  <form id="payment-form">
     <div id="card-element">
       <!-- Elements will create input elements here -->
     </div>
